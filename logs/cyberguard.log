@@ -1,0 +1,33 @@
+2026-02-17 22:03:37,711 - CyberGuard - INFO - Loaded 36 YARA rule files.
+2026-02-17 22:03:37,728 - CyberGuard - INFO - YARA hot-reload watcher started.
+2026-02-17 22:03:37,729 - CyberGuard - INFO - ML model loaded from disk.
+2026-02-17 22:03:40,009 - CyberGuard - INFO - Scanning c:\Users\pc\Desktop\Scanner.exe (source: manual)
+2026-02-17 22:03:40,124 - CyberGuard - INFO - Cache hit for 017fde86... score=3
+2026-02-17 22:04:20,460 - CyberGuard - INFO - Watching directory: c:\Users\pc\Desktop\N-101
+2026-02-17 22:04:20,476 - CyberGuard - INFO - Registry change: Registry added: 18446744071562067970\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\SecurityHealth=%windir%\system32\SecurityHealthSystray.exe
+2026-02-17 22:04:20,498 - CyberGuard - INFO - All real-time monitors started.
+2026-02-17 22:04:20,498 - CyberGuard - ERROR - ETW monitor failed (run as admin?): (1314, 'OpenEventLogW', 'A required privilege is not held by the client.')
+2026-02-17 22:04:20,566 - CyberGuard - INFO - Web dashboard running on http://localhost:5000
+2026-02-17 22:04:20,599 - CyberGuard - INFO - Registry change: Registry added: 18446744071562067970\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\RtkAudUService="C:\Windows\System32\DriverStore\FileRepository\realtekservice.inf_amd64_1e9988599adb3e80\RtkAudUService64.exe" -background
+2026-02-17 22:04:20,711 - CyberGuard - INFO - Registry change: Registry added: 18446744071562067970\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\MuseHub="C:\Program Files\MuseHub\current\MuseHub.exe" "----ms-protocol:ms-encodedlaunch:App?ContractId=Windows.StartupTask&TaskId=MuseHub"
+2026-02-17 22:04:20,745 - CyberGuard - INFO - Registry change: Registry added: 18446744071562067970\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\MTPW="C:\Program Files\MiniTool Partition Wizard 13\updatechecker.exe"
+2026-02-17 22:04:20,758 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.0.100:5000
+2026-02-17 22:04:20,758 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-02-17 22:04:20,760 - CyberGuard - INFO - Registry change: Registry added: 18446744071562067970\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\tvncontrol="C:\Program Files\TightVNC\tvnserver.exe" -controlservice -slave
+2026-02-17 22:04:20,768 - CyberGuard - INFO - Registry change: Registry added: 18446744071562067969\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\Windscribe="C:\Program Files\Windscribe\Windscribe.exe" --autostart
+2026-02-17 22:04:20,775 - CyberGuard - INFO - Registry change: Registry added: 18446744071562067969\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\MicrosoftEdgeAutoLaunch_72FC07CE8FBC282A90F28F3BD5668C8E="C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" --no-startup-window --win-session-start
+2026-02-17 22:04:20,784 - CyberGuard - INFO - Registry change: Registry added: 18446744071562067969\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\windwos=C:\Users\pc\AppData\Roaming\windwos.exe
+2026-02-17 22:04:20,792 - CyberGuard - INFO - Registry change: Registry added: 18446744071562067969\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\SandboxiePlus_AutoRun="C:\Program Files\Sandboxie-Plus\sandman.exe" -autorun
+2026-02-17 22:04:20,801 - CyberGuard - INFO - Registry change: Registry added: 18446744071562067969\SOFTWARE\Microsoft\Windows\CurrentVersion\Run\41e55bba5bc2a4d2f04a1ec5e294d90f="C:\Users\pc\AppData\Local\Temp\update.exe" ..
+2026-02-17 22:04:40,230 - werkzeug - INFO - 192.168.0.100 - - [17/Feb/2026 22:04:40] "GET / HTTP/1.1" 200 -
+2026-02-17 22:04:40,349 - werkzeug - INFO - 192.168.0.100 - - [17/Feb/2026 22:04:40] "GET /api/alerts HTTP/1.1" 200 -
+2026-02-17 22:04:40,386 - werkzeug - INFO - 192.168.0.100 - - [17/Feb/2026 22:04:40] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-02-17 22:04:42,331 - werkzeug - INFO - 192.168.0.100 - - [17/Feb/2026 22:04:42] "GET /api/alerts HTTP/1.1" 200 -
+2026-02-17 22:04:44,350 - werkzeug - INFO - 192.168.0.100 - - [17/Feb/2026 22:04:44] "GET /api/alerts HTTP/1.1" 200 -
+2026-02-17 22:04:46,397 - werkzeug - INFO - 192.168.0.100 - - [17/Feb/2026 22:04:46] "GET /api/alerts HTTP/1.1" 200 -
+2026-02-17 22:04:56,761 - CyberGuard - INFO - Scanning c:\Users\pc\Desktop\N-101\logs\cyberguard.log (source: file_modify)
+2026-02-17 22:04:57,764 - CyberGuard - INFO - VT upload: Upload queued (interactive)
+2026-02-17 22:04:57,764 - CyberGuard - WARNING - Threat detected: c:\Users\pc\Desktop\N-101\logs\cyberguard.log (score=6, verdict=SUSPICIOUS)
