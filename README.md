@@ -1,6 +1,6 @@
 # 🛡️ N-Guard v1.0 Advanced EDR-Ready Malware Defense Toolkit
 
-**CyberGuard Pro** is an enterprise-grade **Endpoint Detection and Response (EDR)** toolkit designed to protect Windows systems from modern cyber threats. It combines **static analysis**, **behavioral monitoring**, **machine learning**, **cloud intelligence**, and **real‑time response** to detect, analyze, and neutralize malware, ransomware, and network attacks.
+**N-Guard v1.0** is an enterprise-grade **Endpoint Detection and Response (EDR)** toolkit designed to protect Windows systems from modern cyber threats. It combines **static analysis**, **behavioral monitoring**, **machine learning**, **cloud intelligence**, and **real‑time response** to detect, analyze, and neutralize malware, ransomware, and network attacks.
 
 > **⚠️ Important**  
 > This tool is intended for **security professionals**, **system administrators**, and **researchers**. It requires **administrator privileges** for full functionality (ETW, registry monitoring, firewall blocking).
@@ -102,7 +102,7 @@ By default, the tool monitors its own base directory. You can change this by edi
 
 ## 🚀 Usage
 
-CyberGuard Pro provides three operation modes:
+N-Guard v1.0provides three operation modes:
 
 ### 1️⃣ Interactive CLI
 
@@ -162,7 +162,7 @@ N-Guard/
 ├── requirements.txt        # Python dependencies
 ├── rules/                  # YARA rules directory (hot‑reload enabled)
 ├── quarantine/             # Quarantined files (AES‑encrypted ZIPs)
-├── logs/                   # Log files (cyberguard.log)
+├── logs/                   # Log files (N-Guard v1.0.log)
 ├── db/                     # SQLite database (reputation.db)
 └── models/                 # ML model storage (classifier.pkl)
 ```
@@ -199,11 +199,11 @@ Edit the `SCORE_*` constants in the `Config` class inside `n-guard.py`.
 
 ### Adding New Detectors
 
-The tool is designed with extensibility in mind. You can add new monitoring or analysis classes and integrate them into `CyberGuardCore`.
+The tool is designed with extensibility in mind. You can add new monitoring or analysis classes and integrate them into `N-Guard v1.0Core`.
 
 ### Running as a Windows Service
 
-To run CyberGuard Pro as a background service, you can use **NSSM** (Non‑Sucking Service Manager) or wrap it with `pythonw.exe` and a batch script.
+To run N-Guard v1.0as a background service, you can use **NSSM** (Non‑Sucking Service Manager) or wrap it with `pythonw.exe` and a batch script.
 
 ---
 
@@ -227,7 +227,7 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 ## ⚠️ Disclaimer
 
-**CyberGuard Pro** is provided for educational and defensive purposes only. The authors are not responsible for any misuse or damage caused by this tool. Always ensure you have proper authorization before monitoring or scanning systems you do not own.
+**N-Guard v1.0 Pro** is provided for educational and defensive purposes only. The authors are not responsible for any misuse or damage caused by this tool. Always ensure you have proper authorization before monitoring or scanning systems you do not own.
 
 ---
 
