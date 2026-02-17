@@ -1,4 +1,3 @@
-
 # 🛡️ N-Guard v1.0 Advanced EDR-Ready Malware Defense Toolkit
 
 **CyberGuard Pro** is an enterprise-grade **Endpoint Detection and Response (EDR)** toolkit designed to protect Windows systems from modern cyber threats. It combines **static analysis**, **behavioral monitoring**, **machine learning**, **cloud intelligence**, and **real‑time response** to detect, analyze, and neutralize malware, ransomware, and network attacks.
@@ -35,8 +34,7 @@ Install all dependencies with `pip` (see [Installation](#installation)):
 ```
 yara-python, requests, pefile, psutil, watchdog, python-magic, python-dotenv,
 pyzipper, joblib, scikit-learn, numpy, flask, pywin32
- ```
-
+```
 
 ---
 
@@ -47,7 +45,196 @@ pyzipper, joblib, scikit-learn, numpy, flask, pywin32
 ```bash
 git clone https://github.com/yourusername/cyberguard-pro.git
 cd cyberguard-pro
+```
 
+### 2. Create a virtual environment (recommended)
+
+```bash
 python -m venv venv
 venv\Scripts\activate   # On Windows
+```
+
+### 3. Install dependencies
+
+```bash
 pip install -r requirements.txt
+```
+
+If `requirements.txt` is not provided, install manually:
+
+```bash
+pip install yara-python requests pefile psutil watchdog python-magic python-dotenv pyzipper joblib scikit-learn numpy flask pywin32
+```
+
+> **Note for `python-magic` on Windows**:  
+> Install `python-magic-bin` instead:  
+> `pip install python-magic-bin`
+
+---
+
+## ⚙️ Configuration
+
+### API Keys (optional but recommended)
+
+Create a `.env` file in the project root:
+
+```ini
+VT_API_KEY=your_virustotal_api_key_here
+ABUSEIPDB_API_KEY=your_abuseipdb_api_key_here
+```
+
+- **VirusTotal API key**: Get one from [virustotal.com](https://www.virustotal.com) (free tier available).
+- **AbuseIPDB API key**: Register at [abuseipdb.com](https://www.abuseipdb.com).
+
+If no keys are provided, cloud features will be disabled.
+
+### YARA Rules
+
+Place your YARA rule files (`.yar` or `.yara`) inside the `rules/` directory. The tool automatically loads all rules and **hot‑reloads** them when changes are detected.
+
+Example rules are provided in the repository.
+
+### Monitored Directories
+
+By default, the tool monitors its own base directory. You can change this by editing `Config.MONITORED_DIRS` in the code or by adding your own configuration mechanism (not yet exposed via CLI).
+
+---
+
+## 🚀 Usage
+
+CyberGuard Pro provides three operation modes:
+
+### 1️⃣ Interactive CLI
+
+Run the tool without arguments to enter an interactive menu:
+
+```bash
+python cyberguard.py
+```
+
+You will see:
+```
+Options:
+1. Scan file
+2. Scan directory
+3. Start monitoring
+4. Show recent alerts
+5. Exit
+```
+
+### 2️⃣ Command‑line scanning
+
+```bash
+# Scan a single file
+python cyberguard.py scan path/to/file.exe
+
+# Scan all files in a directory recursively
+python cyberguard.py scan path/to/directory
+```
+
+### 3️⃣ Real‑time monitoring
+
+```bash
+python cyberguard.py monitor
+```
+
+This starts all enabled monitors (file, process, network, ETW, registry). The web dashboard becomes available at [http://localhost:5000](http://localhost:5000). Press `Ctrl+C` to stop.
+
+---
+
+## 🌐 Web Dashboard
+
+When monitoring mode is active, open your browser and go to `http://localhost:5000`. The dashboard shows:
+
+- **Recent alerts** with timestamp, source, target, score, and verdict.
+- **System statistics** (number of processes, CPU, memory usage).
+
+The dashboard auto‑refreshes every 2 seconds.
+
+---
+
+## 📁 Project Structure
+
+```
+cyberguard-pro/
+├── cyberguard.py          # Main application
+├── .env                    # API keys (create this file)
+├── requirements.txt        # Python dependencies
+├── rules/                  # YARA rules directory (hot‑reload enabled)
+├── quarantine/             # Quarantined files (AES‑encrypted ZIPs)
+├── logs/                   # Log files (cyberguard.log)
+├── db/                     # SQLite database (reputation.db)
+└── models/                 # ML model storage (classifier.pkl)
+```
+
+---
+
+## 🧪 Example Walkthrough
+
+1. **First scan** of `suspicious.exe`:
+   - Hashes calculated.
+   - YARA matches detected → score +3.
+   - PE analysis shows packed section → score +2.
+   - VT lookup returns "Not found", user prompted to upload.
+   - Total score = 5 → **SUSPICIOUS**.
+   - User chooses to quarantine.
+
+2. **Second scan** of the same file (after quarantine):
+   - Cache hit: file already in database with score 5 → result returned instantly.
+
+3. **Monitoring mode**:
+   - A new file `malware.exe` is created in the watched directory.
+   - FileMonitorHandler triggers a scan.
+   - ProcessMonitor detects a new process connecting to a suspicious IP.
+   - IP checked against AbuseIPDB → score 80 → alert generated.
+   - Firewall rule added to block that IP.
+
+---
+
+## 🛠 Advanced Topics
+
+### Customizing Scoring Weights
+
+Edit the `SCORE_*` constants in the `Config` class inside `cyberguard.py`.
+
+### Adding New Detectors
+
+The tool is designed with extensibility in mind. You can add new monitoring or analysis classes and integrate them into `CyberGuardCore`.
+
+### Running as a Windows Service
+
+To run CyberGuard Pro as a background service, you can use **NSSM** (Non‑Sucking Service Manager) or wrap it with `pythonw.exe` and a batch script.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a feature branch (`git checkout -b feature/amazing-feature`).
+3. Commit your changes (`git commit -m 'Add some amazing feature'`).
+4. Push to the branch (`git push origin feature/amazing-feature`).
+5. Open a Pull Request.
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License** – see the [LICENSE](LICENSE) file for details.
+
+---
+
+## ⚠️ Disclaimer
+
+**CyberGuard Pro** is provided for educational and defensive purposes only. The authors are not responsible for any misuse or damage caused by this tool. Always ensure you have proper authorization before monitoring or scanning systems you do not own.
+
+---
+
+## 📬 Contact
+
+For questions, suggestions, or issues, please open an issue on GitHub or contact the maintainer at [your.email@example.com].
+
+---
+
+**Stay safe. Stay secure.** 🛡️
