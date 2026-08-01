@@ -21,9 +21,9 @@
 
 | Version | Date | Highlights |
 |:---:|:---:|:---|
-| **v3.0** | 2025 | Real ML training data, central server, Windows Service, online/offline auto-switch |
-| v2.0 | 2025 | Statistical ML dataset, secured dashboard, extended monitoring, production server |
-| v1.0 | 2025 | Initial release — YARA, file scanning, basic dashboard |
+| **v3.0** | 2026 | Real ML training data, central server, Windows Service, online/offline auto-switch |
+| v2.0 | 2026 | Statistical ML dataset, secured dashboard, extended monitoring, production server |
+| v1.0 | 2026 | Initial release — YARA, file scanning, basic dashboard |
 
 ---
 
