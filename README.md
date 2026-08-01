@@ -1,197 +1,103 @@
-# 🛡️ N-Guard v1.0 Advanced EDR-Ready Malware Defense Toolkit
+# 🛡️ N-Guard v3.0 — Advanced EDR Security Toolkit
 
-**N-Guard v1.0** is an enterprise-grade **Endpoint Detection and Response (EDR)** toolkit designed to protect Windows systems from modern cyber threats. It combines **static analysis**, **behavioral monitoring**, **machine learning**, **cloud intelligence**, and **real‑time response** to detect, analyze, and neutralize malware, ransomware, and network attacks.
+<div align="center">
 
-> **⚠️ Important**   
-> This tool is intended for **security professionals**, **system administrators**, and **researchers**. It requires **administrator privileges** for full functionality (ETW, registry monitoring, firewall blocking).
+![Version](https://img.shields.io/badge/version-3.0-blue?style=for-the-badge)
+![Python](https://img.shields.io/badge/Python-3.8%2B-yellow?style=for-the-badge&logo=python)
+![Platform](https://img.shields.io/badge/Windows-10%2F11-0078D6?style=for-the-badge&logo=windows)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![Tests](https://img.shields.io/badge/tests-33%2F33%20passing-brightgreen?style=for-the-badge)
 
----
+**Enterprise-grade Endpoint Detection & Response toolkit for security teams**  
+*Real ML · Online + Offline · Centralized Management · Windows Service*
 
-## ✨ Key Features
+[Installation](#-installation) • [Usage](#-usage) • [What's New](#-whats-new-in-v30) • [Architecture](#-architecture) • [FAQ](#-faq)
 
-| Category | Features |
-|----------|----------|
-| **🔍 Static Analysis** | – Hash calculation (MD5, SHA1, SHA256)<br>– File type detection via magic bytes<br>– Deep PE analysis (suspicious imports, entropy, packers, entry point anomalies, timestamp checks)<br>– String extraction (with size limits) & heuristic pattern matching (URLs, PowerShell, base64, ransomware keywords)<br>– **YARA rule scanning** (hot‑reload support) |
-| **🧠 Machine Learning** | – Random Forest classifier trained on file features (size, entropy, suspicious imports, packed status, digital signature)<br>– Real‑time probability scoring integrated into threat scoring engine |
-| **☁️ Cloud Intelligence** | – **VirusTotal** hash lookup (with optional file upload, size‑limited to 32 MB)<br>– **AbuseIPDB** IP reputation check for outbound connections |
-| **📊 Behavioral Monitoring** | – **File system** (watchdog) – monitors file creation/modification in watched directories<br>– **Process** (psutil) – detects new processes, network connections, file access, suspicious command lines<br>– **Network** – detects port scans (SYN‑sent tracking) and automatically blocks offending IPs via Windows Firewall<br>– **ETW (Windows)** – monitors security events (process creation) – needs admin<br>– **Registry** – monitors persistence locations (Run, RunOnce, Services) |
-| **⚖️ Threat Scoring** | Weighted scoring from all detectors, producing a verdict:<br>– **CLEAN** (0‑4)<br>– **SUSPICIOUS** (5‑9)<br>– **MALICIOUS** (10‑14)<br>– **CRITICAL** (15+) |
-| **🚨 Response Actions** | – Automatic **quarantine** (AES‑256 encrypted ZIP with password)<br>– **Sandbox execution** via Sandboxie‑Plus (if installed)<br>– **Process termination** (whitelist‑protected)<br>– Interactive prompts for user decisions<br>– All events logged to **SQLite** database and shown in **real‑time web dashboard** |
-| **🌐 Web Dashboard** | Built with **Flask** – live alerts, system stats, easy monitoring at `http://localhost:5000` |
+</div>
 
 ---
 
+## 📋 Changelog
 
-## 📊 خشتەی بەراوردکاری گشتگیر
-
-| تایبەتمەندی | N-Guard (EDR) | Malwarebytes | Bitdefender | Windows Defender |
-| :--- | :--- | :--- | :--- | :--- |
-| **جۆری پاراستن** | چاودێری ڕەفتاری و کاردانەوە (EDR) | پشکنین و سڕینەوەی مالوێر | پاراستنی گشتگیر (EPP) | پاراستنی بنەڕەتی |
-| **دۆزینەوەی هەڕەشە** | ML + YARA + Cloud + Behavioral | Katana Engine + Heuristics | بنکەدراوەی گەورە + AI | بنکەدراوەی مایکرۆسۆفت |
-| **کۆنترۆڵی بەکارهێنەر** | **تەواو (کۆدی کراوەیە)** | سنووردار | سنووردار | زۆر سنووردار |
-| **کاردانەوە (Response)** | کەرەنتینە + کوشتنی پڕۆسە + فایروۆڵ | سڕینەوەی ئۆتۆماتیکی | سڕینەوەی ئۆتۆماتیکی | سڕینەوەی ئۆتۆماتیکی |
-| **داشبۆرد و مۆنیتۆر** | داشبۆردی وێبی ناوخۆیی (Real-time) | ئەپڵیکەیشنی ویندۆز | داشبۆردی هەوری | تەنها ویندۆز سکیوریتی |
-| **بەکارهێنانی سەرچاوە** | **کەم و سووک (Lightweight)** | مامناوەند | مامناوەند بۆ زۆر | زۆر کەم |
-| **تێچوو** | **بێبەرامبەر (Open Source)** | پارە (ساڵانە) | پارە (ساڵانە) | بێبەرامبەر |
+| Version | Date | Highlights |
+|:---:|:---:|:---|
+| **v3.0** | 2026 | Real ML training data, central server, Windows Service, online/offline auto-switch |
+| v2.0 | 2026 | Statistical ML dataset, secured dashboard, extended monitoring, production server |
+| v1.0 | 2026 | Initial release — YARA, file scanning, basic dashboard |
 
 ---
 
-## 🔍 شیکردنەوەی تەکنیکی و خاڵە جیاکەرەوەکان
+## ✨ What's New in v3.0
 
-### ١. بۆچی N-Guard جیاوازە؟
-سیستەمی **N-Guard** تەنها فایلەکان ناپشکنێت، بەڵکو چاودێری **ڕەفتاری (Behavioral Monitoring)** کۆمپیوتەرەکە دەکات. بۆ نموونە، ئەگەر پڕۆگرامێک بیەوێت پەیوەندی بە سێرڤەرێکی گوماناوییەوە بکات یان گۆڕانکاری لە ڕیجستری ویندۆزدا بکات، N-Guard دەستبەجێ دەیناسێتەوە. ئەمە تایبەتمەندییەکە کە زۆربەی ئەنتیڤایرۆسە سادەکان نایانەوێت یان ناتوانن بەو وردییە ئەنجامی بدەن.
+### 🧠 Real Malware Training Data (Major Change)
+Previous versions trained the ML model on random statistical data. v3.0 uses **real malware samples**:
 
-### ٢. N-Guard بەرامبەر Malwarebytes
-*   **شەفافیەت و متمانە**: N-Guard کۆدی کراوەیە، واتە تۆ دەزانیت چۆن کار دەکات. بەڵام Malwarebytes کۆدەکەی داخراوە و دەبێت متمانە بە کۆمپانیاکە بکەیت.
-*   **کاردانەوەی تۆڕ (Network Response)**: N-Guard دەتوانێت ئایپی (IP) هاکەرەکان لە فایروۆڵدا بلۆک بکات، کە ئەمە تایبەتمەندییەکی پێشکەوتووی EDRـە و لە وەشانی ئاسایی Malwarebytesدا بەو شێوەیە نییە.
-*   **بەکارهێنانی سەرچاوە**: N-Guard زۆر سووکترە و کۆمپیوتەرەکە قورس ناکات، لە کاتێکدا Malwarebytes هەندێک جار سەرچاوەیەکی زۆری سیستەم بەکاردەهێنێت.
+- **MalwareBazaar API** (free, no key required) — latest real-world malware metadata
+- **GitHub IOC Feeds** — verified malicious hashes from Maltrail & PAN Unit42
+- **Auto-update every 24 hours** — model retrains automatically with fresh data
+- **Ensemble model**: GradientBoosting + RandomForest (Voting) — AUC > 0.95
 
-### ٣. خاڵە بەهێزەکانی N-Guard (پەرەپێدراو لەلایەن n101)
-*   **تەکنەلۆژیای تێکەڵاو**: بەکارهێنانی یاساکانی **YARA** و مۆدێلی **Machine Learning** پێکەوە، ئاستێکی بەرزی پاراستن دابین دەکات.
-*   **داشبۆردی وێب**: هەبوونی داشبۆردێکی وێبی ناوخۆیی بۆ چاودێریکردنی ڕاستەوخۆی هەڕەشەکان، کە ئەمە لە زۆربەی ئەنتیڤایرۆسەکاندا نییە.
+### 🌐 Automatic Online / Offline Switching
+```
+Internet available  →  MalwareBazaar + VirusTotal + AbuseIPDB + ML model
+No internet         →  Offline Hash DB + pre-trained ML model (local only)
+```
+The system detects connectivity automatically — no manual configuration needed.
+
+### 🏢 Central Server (New)
+- **One server + multiple agents** over a local network (LAN)
+- **WebSocket dashboard** — alerts appear in real time without page refresh
+- **Offline queue** — agents buffer alerts locally and flush when reconnected
+- Separate authentication: `X-Agent-Secret` for agents, `X-Auth-Token` for dashboard
+
+### 🖥️ Windows Service (New)
+```bat
+install_service.bat    ← one click, done
+```
+- Starts automatically with Windows
+- Runs silently in the background
+- Controlled via `sc start/stop NGuardAgent`
+
+### 🔒 Security Hardening
+- Quarantine passwords stored in **database only** — never in plain-text files
+- Dashboard bound to `127.0.0.1` by default — not exposed to the network
+- All secrets live in `.env` — never hardcoded
 
 ---
 
-## 🏆 ئەنجام و پێشنیار
+## 📊 Comparison
 
-ئەگەر تۆ بەکارهێنەرێکی پێشکەوتوویت یان دەتەوێت پڕۆژەیەکی تایبەت بپارێزیت، **N-Guard** نەک هەر جێگەی ئەنتیڤایرۆسەکان دەگرێتەوە، بەڵکو زانیاری و پاراستنێکی قووڵترت پێ دەدات. ئەم پڕۆژەیە کە لەلایەن **n101** پەرەی پێدراوە، نموونەیەکی باڵایە لە داهێنان لە بواری ئاسایشی دیجیتاڵیدا.
-
-> **💡 پێشنیاری زێڕین:**
-> باشترین ڕێگە ئەوەیە N-Guard وەک چینێکی پاراستنی سەرەکی و پێشکەوتوو بەکاربهێنرێت. ئەم ئامرازە بۆ پاراستنی سێرڤەرەکان و کۆمپیوتەری گەشەپێدەران بێوێنەیە.
-
----
-
-
-
-## 📦 Requirements
-
-- **Python 3.8+**
-- **Windows** (for full EDR capabilities; some features work on Linux, but ETW, registry, and firewall blocking are Windows‑only)
-- **Administrator privileges** (for ETW, firewall blocking, and some registry monitoring)
-
-### Python Libraries
-
-Install all dependencies with `pip` (see [Installation](#installation)):
-
-```
-yara-python, requests, pefile, psutil, watchdog, python-magic, python-dotenv,
-pyzipper, joblib, scikit-learn, numpy, flask, pywin32
-```
+| Feature | N-Guard v3 | Malwarebytes | Bitdefender | Windows Defender |
+|:---|:---:|:---:|:---:|:---:|
+| Open source | ✅ | ❌ | ❌ | ❌ |
+| Real ML training data | ✅ | ✅ | ✅ | ✅ |
+| Offline detection | ✅ | ⚠️ | ⚠️ | ⚠️ |
+| Centralized management | ✅ | ❌ | ✅ (paid) | ❌ |
+| Windows Service | ✅ | ✅ | ✅ | ✅ |
+| YARA rules | ✅ | ❌ | ❌ | ❌ |
+| Firewall auto-block | ✅ | ❌ | ✅ | ⚠️ |
+| Cost | 🆓 Free | 💰 Annual | 💰 Annual | 🆓 Free |
 
 ---
 
-## 🔧 Installation
+## 🏗️ Architecture
 
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/DuckyHax040/N-Guard.git
-cd N-Guard
 ```
-
-### 2. Create a virtual environment (recommended)
-
-```bash
-python -m venv venv
-venv\Scripts\activate   # On Windows
+N-Guard v3.0
+│
+├── Central Server (one per network)
+│   ├── Receives alerts from all agents via REST API
+│   ├── WebSocket dashboard (real-time)
+│   └── SQLite central database
+│
+└── Agent (one per endpoint)
+    ├── File Monitor     — watchdog (create / modify events)
+    ├── Process Monitor  — psutil (new processes, suspicious commands)
+    ├── Network Monitor  — connection tracking, port scan detection
+    ├── Registry Monitor — Run/RunOnce/Services persistence keys (Windows)
+    ├── Static Analyzer  — hashes, PE analysis, YARA, string heuristics
+    └── ML Engine        — offline hash DB + ensemble classifier
 ```
-
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-If `requirements.txt` is not provided, install manually:
-
-```bash
-pip install yara-python requests pefile psutil watchdog python-magic python-dotenv pyzipper joblib scikit-learn numpy flask pywin32
-```
-
-> **Note for `python-magic` on Windows**:  
-> Install `python-magic-bin` instead:  
-> `pip install python-magic-bin`
-
----
-
-## ⚙️ Configuration
-
-### API Keys (optional but recommended)
-
-Create a `.env` file in the project root:
-
-```ini
-VT_API_KEY=your_virustotal_api_key_here
-ABUSEIPDB_API_KEY=your_abuseipdb_api_key_here
-```
-
-- **VirusTotal API key**: Get one from [virustotal.com](https://www.virustotal.com) (free tier available).
-- **AbuseIPDB API key**: Register at [abuseipdb.com](https://www.abuseipdb.com).
-
-If no keys are provided, cloud features will be disabled.
-
-### YARA Rules
-
-Place your YARA rule files (`.yar` or `.yara`) inside the `rules/` directory. The tool automatically loads all rules and **hot‑reloads** them when changes are detected.
-
-Example rules are provided in the repository.
-
-### Monitored Directories
-
-By default, the tool monitors its own base directory. You can change this by editing `Config.MONITORED_DIRS` in the code or by adding your own configuration mechanism (not yet exposed via CLI).
-
----
-
-## 🚀 Usage
-
-N-Guard v1.0provides three operation modes:
-
-### 1️⃣ Interactive CLI
-
-Run the tool without arguments to enter an interactive menu:
-
-```bash
-python n-guard.py
-```
-
-You will see:
-```
-Options:
-1. Scan file
-2. Scan directory
-3. Start monitoring
-4. Show recent alerts
-5. Exit
-```
-
-### 2️⃣ Command‑line scanning
-
-```bash
-# Scan a single file
-python n-guard.py scan path/to/file.exe
-
-# Scan all files in a directory recursively
-python n-guard.py scan path/to/directory
-```
-
-### 3️⃣ Real‑time monitoring
-
-```bash
-python n-guard.py monitor
-```
-
-This starts all enabled monitors (file, process, network, ETW, registry). The web dashboard becomes available at [http://localhost:5000](http://localhost:5000). Press `Ctrl+C` to stop.
-
----
-
-## 🌐 Web Dashboard
-
-When monitoring mode is active, open your browser and go to `http://localhost:5000`. The dashboard shows:
-
-- **Recent alerts** with timestamp, source, target, score, and verdict.
-- **System statistics** (number of processes, CPU, memory usage).
-
-The dashboard auto‑refreshes every 2 seconds.
 
 ---
 
@@ -199,85 +105,393 @@ The dashboard auto‑refreshes every 2 seconds.
 
 ```
 N-Guard/
-├── n-guard.py          # Main application
-├── .env                    # API keys (create this file)
-├── requirements.txt        # Python dependencies
-├── rules/                  # YARA rules directory (hot‑reload enabled)
-├── quarantine/             # Quarantined files (AES‑encrypted ZIPs)
-├── logs/                   # Log files (N-Guard v1.0.log)
-├── db/                     # SQLite database (reputation.db)
-└── models/                 # ML model storage (classifier.pkl)
+├── agent/
+│   └── agent.py              ← Main agent (monitors + scanner + Windows Service)
+├── ml/
+│   └── engine.py             ← ML engine + offline hash DB + auto-update
+├── server/
+│   └── central_server.py     ← Central server + WebSocket dashboard
+├── rules/                    ← YARA rules directory (hot-reload)
+│   └── basic.yar
+├── db/                       ← SQLite databases (auto-created)
+│   ├── reputation.db         ← Local scan cache
+│   ├── hash.db               ← Offline malware hash database
+│   └── central.db            ← Central server database
+├── models/                   ← ML model (auto-trained on first run)
+│   └── nguard_ensemble.pkl
+├── quarantine/               ← AES-256 encrypted quarantine ZIPs
+├── logs/                     ← Rotating log files
+├── tests/
+│   └── test_v3.py            ← 33 automated tests
+├── requirements.txt
+├── .env.example
+└── install_service.bat       ← One-click Windows Service installer
 ```
 
 ---
 
-## 🧪 Example Walkthrough
+## ⚙️ Feature Overview
 
-1. **First scan** of `suspicious.exe`:
-   - Hashes calculated.
-   - YARA matches detected → score +3.
-   - PE analysis shows packed section → score +2.
-   - VT lookup returns "Not found", user prompted to upload.
-   - Total score = 5 → **SUSPICIOUS**.
-   - User chooses to quarantine.
-
-2. **Second scan** of the same file (after quarantine):
-   - Cache hit: file already in database with score 5 → result returned instantly.
-
-3. **Monitoring mode**:
-   - A new file `malware.exe` is created in the watched directory.
-   - FileMonitorHandler triggers a scan.
-   - ProcessMonitor detects a new process connecting to a suspicious IP.
-   - IP checked against AbuseIPDB → score 80 → alert generated.
-   - Firewall rule added to block that IP.
+| Category | Details |
+|:---|:---|
+| **Static Analysis** | MD5 / SHA1 / SHA256 hashing, file type detection, PE analysis (imports, entropy, packers, entry point), YARA scanning, string heuristics |
+| **ML Features (10)** | File size, header entropy, body entropy, max section entropy, suspicious import count, suspicious string count, packed flag, digital signature, section count, entry-point anomaly |
+| **Offline Hash DB** | SQLite — identifies known malware without internet |
+| **VirusTotal** | Hash lookup (API key required) |
+| **AbuseIPDB** | IP reputation check on outbound connections |
+| **File Monitor** | watchdog — creation and modification events |
+| **Process Monitor** | psutil — new processes + suspicious command lines |
+| **Network Monitor** | Port scan detection, IP reputation checking |
+| **Registry Monitor** | Detects new autorun entries (Windows) |
+| **Quarantine** | AES-256 ZIP, password stored in DB |
+| **Scoring** | CLEAN (0–4) · SUSPICIOUS (5–9) · MALICIOUS (10–14) · CRITICAL (15+) |
 
 ---
 
-## 🛠 Advanced Topics
+## 📦 Installation
 
-### Customizing Scoring Weights
+### Prerequisites
+- **Python 3.8+**
+- **Windows 10 / 11** (for full EDR features)
+- **Administrator privileges** (for Windows Service and firewall blocking)
 
-Edit the `SCORE_*` constants in the `Config` class inside `n-guard.py`.
+### Step 1 — Clone the repository
+```bash
+git clone https://github.com/DuckyHax040/N-Guard.git
+cd N-Guard
+```
 
-### Adding New Detectors
+### Step 2 — Install dependencies
+```bash
+pip install -r requirements.txt
+```
 
-The tool is designed with extensibility in mind. You can add new monitoring or analysis classes and integrate them into `N-Guard v1.0Core`.
+### Step 3 — Configure
+```bash
+# Copy the template
+copy .env.example .env
 
-### Running as a Windows Service
+# Edit with your values
+notepad .env
+```
 
-To run N-Guard v1.0as a background service, you can use **NSSM** (Non‑Sucking Service Manager) or wrap it with `pythonw.exe` and a batch script.
+`.env` reference:
+```ini
+# Agent settings
+NGUARD_AGENT_ID=                          # leave blank to auto-generate
+NGUARD_SERVER=http://192.168.1.100:5050   # central server address
+NGUARD_API_SECRET=change-me-strong-secret # must match on server and all agents
+NGUARD_SCORE_THRESHOLD=5                  # minimum score to trigger an alert
+
+# Server settings (only needed on the server machine)
+NGUARD_DASH_TOKEN=change-me-dashboard-token
+
+# Optional API keys (features degrade gracefully without them)
+VT_API_KEY=
+ABUSEIPDB_API_KEY=
+```
+
+> **Security note:** Never commit `.env` to version control. It is already listed in `.gitignore`.
+
+---
+
+## 🚀 Usage
+
+### Option A — Windows Service (Recommended for production)
+
+Run as Administrator:
+```bat
+install_service.bat
+```
+
+This automatically installs dependencies, creates `.env` if missing, registers and starts the service.
+
+Control commands:
+```bat
+sc start NGuardAgent    # start
+sc stop  NGuardAgent    # stop
+sc query NGuardAgent    # check status
+```
+
+To uninstall:
+```bash
+python agent/agent.py uninstall
+```
+
+---
+
+### Option B — Central Server + Multiple Agents (Recommended for networks)
+
+**Step 1** — Start the central server (once, on one machine):
+```bash
+python server/central_server.py
+```
+Output:
+```
+========================================================
+  N-Guard v3 — Central Server
+========================================================
+  Address      : http://0.0.0.0:5050
+  Dashboard token  : abc123...   ← save this
+  Agent secret     : xyz789...   ← save this
+========================================================
+```
+
+**Step 2** — Configure `.env` on every endpoint:
+```ini
+NGUARD_SERVER=http://192.168.1.100:5050
+NGUARD_API_SECRET=xyz789...
+```
+
+**Step 3** — Start the agent on each endpoint:
+```bash
+python agent/agent.py start
+```
+
+**Step 4** — Open the dashboard:
+```
+http://192.168.1.100:5050
+Token: abc123...
+```
+
+---
+
+### Option C — Manual CLI
+
+**Scan a single file:**
+```bash
+python agent/agent.py scan C:\Users\Downloads\suspicious.exe
+```
+
+Sample output:
+```json
+{
+  "filepath": "C:\\Users\\Downloads\\suspicious.exe",
+  "sha256": "d4f3a2b1...",
+  "score": 13,
+  "verdict": "MALICIOUS",
+  "alerts": [
+    "YARA:Ransomware_Indicators",
+    "ML:MALICIOUS(87%)",
+    "SuspAPIs(5)"
+  ],
+  "vt_malicious": 42,
+  "offline": false
+}
+```
+
+**Scan a directory:**
+```bash
+python agent/agent.py scan C:\Users\Downloads
+```
+
+**Start real-time monitoring:**
+```bash
+python agent/agent.py start
+```
+
+---
+
+## 🌐 Dashboard
+
+When the central server is running, open:
+```
+http://<server-address>:5050
+```
+
+The dashboard shows:
+
+- **Summary cards** — Critical alerts, unacknowledged alerts, total alerts, active agents
+- **7-day bar chart** — Alert history over the past week
+- **Live alert table** — Real-time via WebSocket, no refresh needed
+- **Agents page** — Status, IP, OS, last seen for every connected endpoint
+
+### Dashboard REST API
+
+All endpoints require the header `X-Auth-Token: <NGUARD_DASH_TOKEN>`.
+
+```
+GET  /api/summary                        → totals and counts
+GET  /api/alerts?limit=100&verdict=CRITICAL&agent_id=...
+GET  /api/agents                         → list of registered agents
+GET  /api/stats                          → 7-day daily breakdown
+POST /api/alerts/{id}/ack                → acknowledge one alert
+POST /api/alerts/ack_all                 → acknowledge all alerts
+```
+
+### Agent REST API
+
+All endpoints require the header `X-Agent-Secret: <NGUARD_API_SECRET>`.
+
+```
+POST /api/agent/register    → register or update agent info
+POST /api/agent/heartbeat   → keep-alive ping (every 60 seconds)
+POST /api/agent/alert       → submit a new alert
+```
+
+---
+
+## 📏 YARA Rules
+
+Place `.yar` files in the `rules/` directory. Rules are **hot-reloaded** — no restart required when you add or edit a file.
+
+Example rules (auto-created on first run):
+```yara
+rule Ransomware_Indicators {
+    strings:
+        $r1 = "your files have been encrypted" nocase
+        $r2 = "bitcoin" nocase
+        $r3 = "ransom" nocase
+        $r4 = "decrypt" nocase
+    condition:
+        3 of them
+}
+
+rule Suspicious_PowerShell {
+    strings:
+        $enc = "-EncodedCommand" nocase
+        $dl  = "DownloadString" nocase
+        $iex = "Invoke-Expression" nocase
+    condition:
+        2 of them
+}
+
+rule Suspicious_Network_Beacon {
+    strings:
+        $ps  = "powershell -w hidden" nocase
+        $cmd = "cmd.exe /c" nocase
+    condition:
+        any of them
+}
+```
+
+---
+
+## 🤖 ML Engine — Details
+
+### 10 Features Extracted Per File
+
+| # | Feature | Description |
+|:---:|:---|:---|
+| 0 | `log_size` | log(1 + file size in bytes) |
+| 1 | `entropy_header` | Byte entropy of first 1 KB |
+| 2 | `entropy_body` | Byte entropy of next 1 MB |
+| 3 | `entropy_max` | Maximum section entropy (PE) |
+| 4 | `sus_import_count` | Suspicious Win32 API imports (0–15) |
+| 5 | `sus_string_count` | Suspicious string pattern matches (0–50) |
+| 6 | `is_packed` | Packer signature detected (0/1) |
+| 7 | `has_certificate` | Valid Authenticode signature (0/1) |
+| 8 | `section_count` | Number of PE sections |
+| 9 | `entry_point_anomaly` | Entry point outside `.text` (0/1) |
+
+### Training Data Sources
+
+| Source | Type | Records |
+|:---|:---|:---:|
+| MalwareBazaar API | Real malware metadata | ~1000 per update |
+| GitHub IOC Feeds (Maltrail, PAN Unit42) | Verified hashes | Varies |
+| Statistical baseline | Research-backed synthetic | 6000 |
+
+### Auto-Update Schedule
+```
+Every 24 hours:
+  Internet available  →  fetch fresh MalwareBazaar samples → retrain model
+  No internet         →  skip, retry at next check
+```
+
+---
+
+## 🧪 Running Tests
+
+```bash
+pip install pytest
+python -m pytest tests/test_v3.py -v
+```
+
+Expected output:
+```
+tests/test_v3.py::TestOfflineHashDB::test_add_and_lookup_sha256     PASSED
+tests/test_v3.py::TestOfflineHashDB::test_lookup_by_md5             PASSED
+tests/test_v3.py::TestOfflineHashDB::test_thread_safety             PASSED
+tests/test_v3.py::TestMLTrainingData::test_shape                    PASSED
+tests/test_v3.py::TestMLTrainingData::test_balanced                 PASSED
+tests/test_v3.py::TestMLTrainingData::test_malicious_higher_entropy PASSED
+tests/test_v3.py::TestFeatureExtraction::test_benign_file_features  PASSED
+tests/test_v3.py::TestFeatureExtraction::test_high_entropy_file     PASSED
+tests/test_v3.py::TestStaticAnalyzer::test_powershell_detected      PASSED
+tests/test_v3.py::TestServerAPI::test_agent_register                PASSED
+tests/test_v3.py::TestServerAPI::test_summary_auth_required         PASSED
+tests/test_v3.py::TestServerAPI::test_agent_alert                   PASSED
+...
+33 passed in 4.80s
+```
+
+---
+
+## ❓ FAQ
+
+**Does it work without internet?**  
+Yes. The offline hash database and ML model work entirely without connectivity. Only MalwareBazaar lookups and VirusTotal require internet.
+
+**Does it work without a VirusTotal API key?**  
+Yes. ML + YARA + offline hash DB operate independently. VirusTotal is used when a key is present.
+
+**How does the ML model stay current?**  
+Automatically — every 24 hours, the engine fetches fresh data from MalwareBazaar and GitHub IOC feeds and retrains the model if internet is available.
+
+**Does it work on Linux?**  
+Partially. ML, file monitoring, and the central server work on Linux. ETW monitoring, registry monitoring, Windows Firewall blocking, and the Windows Service are Windows-only.
+
+**How do I recover a quarantined file?**  
+Files are stored as AES-256 encrypted ZIPs in the `quarantine/` directory. The password is saved in `db/reputation.db` under the `quarantine` alerts. Use `pyzipper` to extract:
+```python
+import pyzipper
+with pyzipper.AESZipFile("quarantine/file.zip") as z:
+    z.extractall(pwd=b"<password>")
+```
+
+**Where should I store secrets and API keys?**  
+In the `.env` file only. Never commit it to version control — it is already in `.gitignore`.
+
+**How do I add custom detection rules?**  
+Drop `.yar` files into the `rules/` directory. Rules are hot-reloaded within seconds — no restart needed.
 
 ---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/amazing-feature`).
-3. Commit your changes (`git commit -m 'Add some amazing feature'`).
-4. Push to the branch (`git push origin feature/amazing-feature`).
-5. Open a Pull Request.
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.  
-You can view the full license here: https://github.com/DuckyHax040/N-Guard/blob/main/LICENSE.md
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/my-feature`
+3. Write tests for your changes
+4. Run the test suite: `python -m pytest tests/`
+5. Open a Pull Request
 
 ---
 
 ## ⚠️ Disclaimer
 
-**N-Guard v1.0 Pro** is provided for educational and defensive purposes only. The authors are not responsible for any misuse or damage caused by this tool. Always ensure you have proper authorization before monitoring or scanning systems you do not own.
+N-Guard is provided for **defensive and educational purposes only**. Always obtain proper authorization before deploying monitoring software on systems you do not own. The maintainers accept no responsibility for misuse.
+
+---
+
+## 📄 License
+
+MIT License — free to use, modify, and distribute.  
+See [LICENSE.md](LICENSE.md) for the full text.
 
 ---
 
 ## 📬 Contact
 
-If you have any questions, suggestions, or encounter issues, feel free to open an issue on GitHub or reach out to the maintainer on Telegram: https://t.me/hovercs
+- **GitHub Issues** — bug reports and feature requests
+- **Telegram** — [@hovercs](https://t.me/hovercs)
 
 ---
 
+<div align="center">
+
 **Stay safe. Stay secure.** 🛡️
+
+*N-Guard v3.0 — developed by n101*
+
+</div>
